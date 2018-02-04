@@ -69,6 +69,5 @@ public class UserController {
 			}
 		}
 		return "user/logout";
-
 	}
 }
