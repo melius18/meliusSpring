@@ -45,7 +45,7 @@
 						</div>
 						<div class="form-group">
 							<label for="exampleInputEmail1">Writer</label> <input type="text"
-								name="writer" class="form-control" placeholder="Enter Writer">
+								name="writer" class="form-control" value='${login.uid}' readonly>
 						</div>
 						<div class="form-group">
 							<label for="exampleInputEmail1">File Drop Here</label>
@@ -132,17 +132,19 @@
 				console.log(that.html());
 				that.get(0).submit();
 			});
-	
-	$(".uploadedList").on("click",".delbtn", function(event) {
+
+	$(".uploadedList").on("click", ".delbtn", function(event) {
 		event.preventDefault();
 		var that = $(this);
 		$.ajax({
-			url:"/deleteFile",
-			type: "post",
-			data: {fileName:$(this).attr("href")},
-			dataType: "text",
-			success: function(result) {
-				if(result == 'deleted') {
+			url : "/deleteFile",
+			type : "post",
+			data : {
+				fileName : $(this).attr("href")
+			},
+			dataType : "text",
+			success : function(result) {
+				if (result == 'deleted') {
 					that.parent("div").parent("li").remove();
 				}
 			}

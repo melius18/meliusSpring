@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@include file="../include/header.jsp"%>
 
 <script
@@ -83,10 +84,13 @@
 				<!-- /.box-body -->
 
 				<div class="box-footer">
-					<button type="submit" class="btn btn-warning modifyBtn"
-						id="modifyBtn">Modify</button>
-					<button type="submit" class="btn btn-danger removeBtn"
-						id="removeBtn">Remove</button>
+					<ul class="mailbox-attachments clearfix uploadedList"></ul>
+					<c:if test="${login.uid == boardVO.writer}">
+						<button type="submit" class="btn btn-warning modifyBtn"
+							id="modifyBtn">Modify</button>
+						<button type="submit" class="btn btn-danger removeBtn"
+							id="removeBtn">Remove</button>
+					</c:if>
 					<button type="submit" class="btn btn-primary goListBtn"
 						id="goListBtn">Go List</button>
 				</div>
@@ -100,19 +104,28 @@
 				<div class="box-header">
 					<h3 class="box-title">ADD NEW REPLY</h3>
 				</div>
-				<div class="box-body">
-					<label for="newReplyWriter">Writer</label> <input
-						class="form-control" type="text" placeholder="USER ID"
-						id="newReplyWriter"> <label for="newReplyText">ReplyText</label>
-					<input class="form-control" type="text" placeholder="REPLY TEXT"
-						id="newReplyText">
-
-				</div>
-				<!-- /.box-body -->
-				<div class="box-footer">
-					<button type="submit" class="btn btn-primary" id="replyAddBtn">ADD
-						REPLY</button>
-				</div>
+				<c:if test="${not empty login}">
+					<div class="box-body">
+						<label for="newReplyWriter">Writer</label> <input
+							class="form-control" type="text" placeholder="USER ID"
+							id="newReplyWriter" value="${login.uid}" readonly="readonly">
+						<label for="newReplyText">ReplyText</label> <input
+							class="form-control" type="text" placeholder="REPLY TEXT"
+							id="newReplyText">
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<button type="submit" class="btn btn-primary" id="replyAddBtn">ADD
+							REPLY</button>
+					</div>
+				</c:if>
+				<c:if test="${empty login}">
+					<div class="box-body">
+						<div>
+							<a href="javascript:goLogin();">Login Please</a>
+						</div>
+					</div>
+				</c:if>
 			</div>
 
 			<!-- The time line -->
@@ -172,14 +185,14 @@
 		<h3 class="timeline-header"><strong>{{rno}}</strong> -{{replyer}}</h3>
 		<div class="timeline-body">{{replytext}} </div>
 			<div class="timeline-footer">
+			{{#eqReplyer replyer}}
 			<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modifyModal">Modify</a>
+			{{/eqReplyer}}
 		</div>
 	</div>   
 </li>
 {{/each}}
 </script>
-
-<ul class="mailbox-attachments clearfix uploadedList"></ul>
 
 <script id="templateAttach" type="text/x-handlebars-template">
 <li data-src='{{fullName}}'>
@@ -199,6 +212,14 @@
 		var month = dateObj.getMonth() + 1;
 		var date = dateObj.getDate();
 		return year + "/" + month + "/" + date;
+	});
+	
+	Handlebars.registerHelper("eqReplyer", function(replyer, block) {
+		var accum = '';
+		if(replyer == '${login.uid}') {
+			accum += block.fn();
+		}
+		return accum;
 	});
 
 	var printData = function(replyArr, target, templateObject) {
