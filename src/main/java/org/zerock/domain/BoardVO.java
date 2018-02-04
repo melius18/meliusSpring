@@ -78,7 +78,7 @@ public class BoardVO {
 	public void setFiles(String[] files) {
 		this.files = files;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "BoardVO [bno=" + bno + ", title=" + title + ", content=" + content + ", writer=" + writer + ", regdate="
